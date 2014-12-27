@@ -408,3 +408,8 @@ F5.0.0a
 	- use the fdes code for ARAP_DES and MSCHAP_DES
 	- increase NAC address array size.  affects the format of the tacacs
 	  wholog file (TACPLUS_WHOLOGFILE); existing file should be removed.
+
+F5.0.0a2
+    - fixes so code will compile without MAXSESS defined
+    - added -U and -Q flags to allow runtime setuid/setgid change to drop
+      privilages - from Robert Drake
