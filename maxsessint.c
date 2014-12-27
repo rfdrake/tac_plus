@@ -45,6 +45,7 @@ is_async(char *portname)
     return(0);
 }
 
+#ifdef MAXSESS
 /*
  * See if this user can have more sessions.
  */
@@ -103,3 +104,4 @@ maxsess_check_count(char *user, struct author_data *data)
     }
     return(0);
 }
+#endif /* MAXSESS */
