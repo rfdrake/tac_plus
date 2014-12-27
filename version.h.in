@@ -1,0 +1,8 @@
+#ifndef VERSION_H
+
+#define VERSION_H
+
+char package[] = "tacacs+";
+char version[] = "F5.0.0a1";
+
+#endif
