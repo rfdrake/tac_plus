@@ -2,15 +2,26 @@ dnl Process this file with autoconf to produce a configure script.
 dnl A configure script is provided, in cause you do not have autoconf.
 
 AC_PREREQ(2.13)
-AC_INIT(CHANGES)
 
+dnl Keeping these in case they're used by something further down.  Autoconf
+dnl might not be run for every release.  These are updated when "./configure"
+dnl runs.
 PACKAGE=`sed -n 's/.*package.*"\(.*\)".*/\1/p' $srcdir/version.h.in|tr -d ' '`
 VERSION=`sed -n 's/.*version.*"\(.*\)".*/\1/p' $srcdir/version.h.in|tr -d ' '`
+
 
 dnl VERSION needs to be updated in version.h.in such that 'make dist'
 dnl uses the correct filename for the directory name and tarball and binaries
 dnl get the right version numbers.
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION, tac_plus@shrubbery.net)
+AC_INIT( [tacacs+],
+         m4_esyscmd([sed -n 's/.*version.*"\(.*\)".*/\1/p' ./version.h.in|tr -d ' \n']),
+         [tac_plus@shrubbery.net],
+         [tacacs+],
+         [http://www.shrubbery.net/tac_plus])
+
+AM_INIT_AUTOMAKE
+
+AC_CONFIG_MACRO_DIR([.])
 
 AM_MAINTAINER_MODE()
 
@@ -126,7 +137,6 @@ ACX_PTHREAD([CC=$PTHREAD_CC; CFLAGS="$CFLAGS $PTHREAD_CFLAGS";
 
 # compiler specifics
 AC_PROG_CC
-AM_C_PROTOTYPES
 AC_PROG_CPP
 AC_C_CONST
 AC_C_INLINE

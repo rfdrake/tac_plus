@@ -28,9 +28,9 @@ libtacacs_la_LDFLAGS += @LDFLAGS@ @PROFLIBS@
 # profiling
 CFLAGS += $(WARN) $(DBG) $(PROFLAGS)
 LDADD = $(PROFLIBS)
-INCLUDES = $(WRAPINCS)
+AM_CPPFLAGS = $(WRAPINCS)
 # CPPFLAGS += @PG_CPPFLAGS@
-# INCLUDES += -I$(top_srcdir)/include @PG_CPPFLAGS@
+# AM_CPPFLAGS += -I$(top_srcdir)/include @PG_CPPFLAGS@
 
 include_HEADERS = tacacs.h
 noinst_HEADERS= fdes.h des_iip.h des_ip.h des_key.h des_s_p.h md4.h mschap.h \
