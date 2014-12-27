@@ -142,7 +142,7 @@ used in log messages, libwrap (tcp_wrappers) checks, and for matching host
 clauses of the configuration file.  Also see
 .BR tac_plus.conf (5).
 .\"
-.TP 
+.TP
 .B \-P
 Parse the configuration file, echo it to standard output while
 parsing, and then exit.
@@ -158,6 +158,12 @@ Listen on the specified port number instead of the default port
 for incoming tcp connections.  Note: this changes the name of the
 pid file created by the daemon.
 .\"
+.TP
+.B \-U <setuid username>
+Specify the username that we will try to use to setuid() the process to.
+.TP
+.B \-Q <setgid groupname>
+Specify the groupname that we will try to use to setgid() the process to.
 .TP
 .B \-S
 Enables or allows client single-connection mode, where-by the client will

@@ -28,6 +28,8 @@
 #include <poll.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <pwd.h>
+#include <grp.h>
 
 #ifdef LIBWRAP
 # include <tcpd.h>
@@ -56,6 +58,8 @@ int opt_S;			/* enable single-connection */
 int wtmpfd;			/* for wtmp file logging */
 char *wtmpfile = NULL;
 char *bind_address = NULL;
+char *setuid_user = NULL;
+char *setgid_group = NULL;
 
 struct timeval started_at;
 
@@ -261,7 +265,7 @@ main(int argc, char **argv)
 	tac_exit(1);
     }
 
-    while ((c = getopt(argc, argv, "B:C:d:hiPp:tGgvSsLl:w:u:")) != EOF)
+    while ((c = getopt(argc, argv, "B:C:d:hiPp:tGgvSsLl:w:u:U:Q:")) != EOF)
 	switch (c) {
 	case 'B':		/* bind() address*/
 	    bind_address = optarg;
@@ -316,6 +320,12 @@ main(int argc, char **argv)
 	case 'u':
 	    wtmpfile = tac_strdup(optarg);
 	    break;
+    case 'U':
+        setuid_user = tac_strdup(optarg);
+        break;
+    case 'Q':
+        setgid_group = tac_strdup(optarg);
+        break;
 
 	default:
 	    fprintf(stderr, "%s: bad switch %c\n", progname, c);
@@ -512,6 +522,27 @@ main(int argc, char **argv)
 	    childpid = 0;
 	}
     }
+
+    if (setuid_user) {
+        struct passwd *pw;
+        if ((pw = getpwnam(setuid_user)) == NULL) {
+            report(LOG_ERR, "Cannot set userid to %s.  getpwname(setuid_user) failed.\n");
+        }
+        if (setuid(pw->pw_uid))
+        report(LOG_ERR, "Cannot set user id to %d %s",
+               pw->pw_uid, strerror(errno));
+    }
+
+    if (setgid_group) {
+        struct group *gr;
+        if ((gr = getgrnam(setgid_group)) == NULL) {
+            report(LOG_ERR, "Cannot set groupid to %s.  getgrnme(setgid_group) failed.\n");
+        }
+        if (setgid(gr->gr_gid))
+        report(LOG_ERR, "Cannot set group id to %d %s",
+               gr->gr_gid, strerror(errno));
+    }
+
 #ifdef TACPLUS_GROUPID
     if (setgid(TACPLUS_GROUPID))
 	report(LOG_ERR, "Cannot set group id to %d %s",
@@ -745,6 +776,8 @@ usage(void)
 		" [-l <logfile>]"
 		" [-p <port>]"
 		" [-u <wtmpfile>]"
+        " [-U <setuid username>]"
+        " [-Q <setgid groupname>]"
 #ifdef MAXSESS
 		" [-w <whologfile>]"
 #endif
